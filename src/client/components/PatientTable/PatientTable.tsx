@@ -16,6 +16,7 @@ const PatientTable = ({ patients }) => {
             <TableCell>ID</TableCell>
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Enrollment Status</TableCell>
+            <TableCell align="left">RAF SCORE</TableCell>
           </TableRow>
         </TableHead>
         {patients && (
@@ -29,6 +30,24 @@ const PatientTable = ({ patients }) => {
                 </TableCell>
                 <TableCell align="left">{patient.name}</TableCell>
                 <TableCell align="left">{patient.enrollmentStatus}</TableCell>
+                <TableCell align="left">
+                  {patient.riskProfiles.reduce((accu, profile) => {
+                    const demographicSum = profile?.demographicCoefficients
+                      ? profile?.demographicCoefficients.reduce(
+                          (sum, num) => sum + num,
+                          0
+                        )
+                      : 0;
+                    const diagnosisSum = profile?.diagnosisCoefficients
+                      ? profile?.diagnosisCoefficients.reduce(
+                          (sum, num) => sum + num,
+                          0
+                        )
+                      : 0;
+
+                    return accu + demographicSum + diagnosisSum;
+                  }, 0) || "N/A"}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

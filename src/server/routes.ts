@@ -1,11 +1,17 @@
 import { Router } from "express";
-import { getPatients } from "./database/helpers";
+import { getPatients, getPatientRiskProfiles } from "./database/helpers";
 
 const router = Router();
 
 router.get("/api/patients", async (req, res) => {
   try {
-    const patients = await getPatients();
+    let patients = await getPatients();
+    const patientRiskProfiles = await getPatientRiskProfiles();
+    patients.forEach((patient) => {
+      patient["riskProfiles"] = patientRiskProfiles.filter(
+        (profile) => profile.patientId === patient.id
+      );
+    });
     return res.send(patients);
   } catch (error) {
     console.error("Error getting patients", error);
