@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Stack,
-  Typography,
-  Button,
-  Table,
-} from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import PatientTable from "../components/PatientTable/PatientTable";
 import CreatePatientForm from "../components/PatientTable/CreatePatientForm";
 
