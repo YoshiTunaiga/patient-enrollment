@@ -29,7 +29,7 @@ const PatientTable = ({ patients }) => {
 
     // Step 1: Calculate RAF scores for each patient's risk profile
     patients.forEach((patient) => {
-      patient &&
+      patient.riskProfiles &&
         patient.riskProfiles.forEach((profile) => {
           if (
             profile.demographicCoefficients &&
@@ -101,7 +101,7 @@ const PatientTable = ({ patients }) => {
                   <TableCell align="left">{patient.name}</TableCell>
                   <TableCell align="left">{patient.enrollmentStatus}</TableCell>
                   <TableCell align="left">
-                    {patient.riskProfiles.length
+                    {patient.riskProfiles && patient.riskProfiles.length
                       ? Math.max(
                           ...patient.riskProfiles.map((profile) => {
                             if (
