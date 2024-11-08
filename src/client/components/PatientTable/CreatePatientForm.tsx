@@ -9,8 +9,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
+import { Patient } from "../../../server/types";
 
-const CreatePatientForm = ({ setAllPatients }) => {
+const CreatePatientForm = ({
+  setAllPatients,
+}: {
+  setAllPatients: (patients: Patient[]) => void;
+}) => {
   const [open, setOpen] = React.useState(false);
   const [patientForm, setPatientForm] = useState({
     name: "",

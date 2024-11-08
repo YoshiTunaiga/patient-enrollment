@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import PatientTable from "../components/PatientTable/PatientTable";
 import CreatePatientForm from "../components/PatientTable/CreatePatientForm";
+import { Patient } from "../../server/types";
 
 const PatientDashboard = () => {
-  const [allPatients, setAllPatients] = useState(null);
+  const [allPatients, setAllPatients] = useState<Patient[]>([]);
 
   useEffect(() => {
     const fetchAllPatients = async () => {
