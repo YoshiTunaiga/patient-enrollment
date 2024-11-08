@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const PatientTable = ({ patients }) => {
   interface HighestRAFSegment {
@@ -28,25 +29,32 @@ const PatientTable = ({ patients }) => {
 
     // Step 1: Calculate RAF scores for each patient's risk profile
     patients.forEach((patient) => {
-      patient.riskProfiles.forEach((profile) => {
-        if (profile.demographicCoefficients && profile.diagnosisCoefficients) {
-          const demographicSum = profile.demographicCoefficients
-            ? profile.demographicCoefficients.reduce((sum, num) => sum + num, 0)
-            : 0;
-          const diagnosisSum = profile.diagnosisCoefficients
-            ? profile.diagnosisCoefficients.reduce((sum, num) => sum + num, 0)
-            : 0;
+      patient &&
+        patient.riskProfiles.forEach((profile) => {
+          if (
+            profile.demographicCoefficients &&
+            profile.diagnosisCoefficients
+          ) {
+            const demographicSum = profile.demographicCoefficients
+              ? profile.demographicCoefficients.reduce(
+                  (sum, num) => sum + num,
+                  0
+                )
+              : 0;
+            const diagnosisSum = profile.diagnosisCoefficients
+              ? profile.diagnosisCoefficients.reduce((sum, num) => sum + num, 0)
+              : 0;
 
-          const rafScore = demographicSum + diagnosisSum;
+            const rafScore = demographicSum + diagnosisSum;
 
-          // Step 2: Aggregate RAF scores by segment name
-          if (!segmentScores[profile.segmentName]) {
-            segmentScores[profile.segmentName] = { totalScore: 0, count: 0 };
+            // Step 2: Aggregate RAF scores by segment name
+            if (!segmentScores[profile.segmentName]) {
+              segmentScores[profile.segmentName] = { totalScore: 0, count: 0 };
+            }
+            segmentScores[profile.segmentName].totalScore += rafScore;
+            segmentScores[profile.segmentName].count += 1;
           }
-          segmentScores[profile.segmentName].totalScore += rafScore;
-          segmentScores[profile.segmentName].count += 1;
-        }
-      });
+        });
     });
 
     // Step 3: Calculate average RAF scores for each segment
@@ -93,32 +101,35 @@ const PatientTable = ({ patients }) => {
                   <TableCell align="left">{patient.name}</TableCell>
                   <TableCell align="left">{patient.enrollmentStatus}</TableCell>
                   <TableCell align="left">
-                    {Math.max(
-                      ...patient.riskProfiles.map((profile) => {
-                        if (
-                          profile?.demographicCoefficients &&
-                          profile?.diagnosisCoefficients
-                        ) {
-                          const demographicSum = profile.demographicCoefficients
-                            ? profile.demographicCoefficients.reduce(
-                                (sum, num) => sum + num,
-                                0
-                              )
-                            : 0;
-                          const diagnosisSum = profile.diagnosisCoefficients
-                            ? profile.diagnosisCoefficients.reduce(
-                                (sum, num) => sum + num,
-                                0
-                              )
-                            : 0;
+                    {patient.riskProfiles.length
+                      ? Math.max(
+                          ...patient.riskProfiles.map((profile) => {
+                            if (
+                              profile?.demographicCoefficients &&
+                              profile?.diagnosisCoefficients
+                            ) {
+                              const demographicSum =
+                                profile.demographicCoefficients
+                                  ? profile.demographicCoefficients.reduce(
+                                      (sum, num) => sum + num,
+                                      0
+                                    )
+                                  : 0;
+                              const diagnosisSum = profile.diagnosisCoefficients
+                                ? profile.diagnosisCoefficients.reduce(
+                                    (sum, num) => sum + num,
+                                    0
+                                  )
+                                : 0;
 
-                          const rafScore = demographicSum + diagnosisSum;
-                          return rafScore;
-                        } else {
-                          return 0;
-                        }
-                      })
-                    ) || "N/A"}
+                              const rafScore = demographicSum + diagnosisSum;
+                              return rafScore;
+                            } else {
+                              return 0;
+                            }
+                          })
+                        )
+                      : "N/A"}
                   </TableCell>
                 </TableRow>
               ))}
@@ -126,12 +137,13 @@ const PatientTable = ({ patients }) => {
           )}
         </Table>
       </TableContainer>
-      <Typography>
-        {patients &&
-          highestRAFSegment &&
-          `Segment: ${highestRAFSegment.segmentName}, Average RAF Score: ${highestRAFSegment.avgScore}
-`}
-      </Typography>
+      <Box>
+        <Typography style={{ marginTop: 10 }}>
+          {patients &&
+            highestRAFSegment &&
+            `Segment: ${highestRAFSegment.segmentName}, Average RAF Score: ${highestRAFSegment.avgScore}`}
+        </Typography>
+      </Box>
     </>
   );
 };
